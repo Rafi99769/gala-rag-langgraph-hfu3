@@ -1,0 +1,28 @@
+[project]
+name = "hf-gala-rag-agentic-u3"
+version = "0.1.0"
+description = "HuggingFace agents unit3 agentic rag named Gala-RAG."
+authors = [
+    {name = "Ahnaf"}
+]
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "datasets (>=3.5.0,<4.0.0)",
+    "langchain (>=0.3.23,<0.4.0)",
+    "langchain-community (>=0.3.21,<0.4.0)",
+    "langchain-core (>=0.3.51,<0.4.0)",
+    "langgraph (>=0.3.28,<0.4.0)",
+    "langchain-openai (>=0.3.12,<0.4.0)",
+    "python-dotenv (>=1.1.0,<2.0.0)",
+    "rank-bm25 (>=0.2.2,<0.3.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry]
+package-mode = false
