@@ -4,13 +4,14 @@ from dotenv import load_dotenv
 from langgraph.graph.message import add_messages
 from langgraph.graph import START, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
-from langchain_core.messages import AnyMessage, HumanMessage, AIMessage
+from langchain_core.messages import AnyMessage
 from langchain_openai import AzureChatOpenAI
 from retriever import guest_info_tool
+from tools import search_tool, weather_info_tool, hub_stats_tool
 
 load_dotenv()
 
-tools = [guest_info_tool]
+tools = [guest_info_tool, search_tool, weather_info_tool, hub_stats_tool]
 
 llm = AzureChatOpenAI(
     azure_endpoint=os.getenv("OPENAI_ENDPOINT"),
@@ -39,8 +40,9 @@ builder.add_edge("tools", "assistant")
 
 alfred = builder.compile()
 
-messages = [HumanMessage(content="Alfred, who is that gentleman talking to the ambassador?")]
-response = alfred.invoke({"messages": messages})
+response = alfred.invoke({
+    "messages": "I need to speak with 'Dr. Nikola Tesla' about recent advancements in wireless energy. Can you help me prepare for this conversation?"
+})
 
 print("🎩 Alfred's Response:")
 print(response['messages'][-1].content)
