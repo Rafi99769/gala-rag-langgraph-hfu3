@@ -1,6 +1,7 @@
 import datasets
 from langchain.docstore.document import Document
-from langchain_community.retrievers import BM25Retriever
+from langchain_community.embeddings import SentenceTransformerEmbeddings
+from langchain_community.vectorstores import FAISS
 from langchain.tools import Tool
 
 guest_dataset = datasets.load_dataset("agents-course/unit3-invitees", split="train")
@@ -18,14 +19,21 @@ docs = [
     for guest in guest_dataset
 ]
 
-bm25_retriever = BM25Retriever.from_documents(docs)
+# Create embeddings using sentence-transformers
+embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+
+# Create a FAISS vector store from documents
+vector_store = FAISS.from_documents(docs, embeddings)
+
+# Create a retriever from the vector store
+st_retriever = vector_store.as_retriever(search_kwargs={"k": 3})
 
 def extract_text(query: str) -> str:
     """Retrieves detailed information about gala guests based on their name or relation.
     """
-    results = bm25_retriever.invoke(query)
+    results = st_retriever.invoke(query)
     if results:
-        return "\n\n".join([doc.page_content for doc in results[:3]])
+        return "\n\n".join([doc.page_content for doc in results])
     else:
         return "No matching guests found."
 
